@@ -45,6 +45,8 @@ facet：<可选>
 
 **修复项**：「做什么」以 `REPAIR：` 开头，来源是考官 `REPAIR` / `REINFORCE` 的 target，或课结束时仍未清的「待重试」。选取时不看到期日（`MEMORY-ENGINE.md` 顺序 0），不转 R0 候选、不推迟。
 
+**面试崩题回流（v9.1）**：`INTERVIEW-BANK.md` 中口述/模拟面判定「崩」的题，建一条 `REPAIR：` 项并写明缺段（如 `REPAIR：缺边界`）；判定「部分」不建队列项，只把结果写回题库。修复方式优先换一道同 capability 的新题，而不是重背原题。
+
 ## 完成标准与结果
 
 `done`/`failed` 依据条目自己的完成标准判定，不依据“学习者参与过”。完成标准尽量写可观察结果，例如“无关键提示独立判断并说出决定性条件”。提示后答对的，按 `EVIDENCE-FORMAT.md` 判别记 `light_hint` / `strong_hint`，可以 `done`，但结果栏必须注明等级，且不能单独清除 `fragile`；`answer_exposed` 不能 `done`。`REPAIR：` 项只有 `independent` 才能 `done`。
