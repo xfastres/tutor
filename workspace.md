@@ -16,6 +16,7 @@ evidence/LNNNN.yaml         # 原子证据：一课一文件，课末一次写
 learning-records/NNNN-*.md  # 决策级记录
 lessons/NNNN-slug.plan.md   # Agent 侧：课型、teaching_block、矩阵、答案钥匙、考官计划、门记录
 lessons/NNNN-slug.html      # 学习者侧：讲解页（可课前，无答案）或复习页（考官后）
+lessons/INTERVIEW-NOTES.md  # tutor 侧：面试题完整四段答案、追问、常见错答、fact-check
 reference/<id>.html         # 压缩后的可复用知识
 INTERVIEW-BANK.md           # 真实面试题库：来源、可信度、关联 S/facet、使用记录
 exercises/                  # 可选：摸底卷、题库
