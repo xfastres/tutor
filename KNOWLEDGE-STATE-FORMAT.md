@@ -112,7 +112,7 @@ knowledge_state:
 ## facets
 
 - facet 是教学上会单独衰减、单独出题的子事实；不是课程大纲。
-- `state`：`ok` = 最近一次在新表面独立通过；`decayed` = 最近一次 R0/复习/考官失败或只在提示后才对；`untested` = 从未单独验证。
+- `state`：`ok` = 最近一次在新表面独立通过，`evidence_ids` 里至少一条 `assistance: independent` 且 `result: passed`；`decayed` = 最近一次 R0/复习/考官失败，或该 facet 只有提示后才对的证据；`untested` = 从未单独验证。只有 `light_hint`/`strong_hint` 证据的 facet 不得标 `ok`。
 - 任一 facet 为 `decayed` → 能力 `stability` 必须为 `fragile`，直到该 facet 在新 `task_id` 下 `assistance: independent` 通过。
 - 升到 `stable` 时所有已测 facet 必须为 `ok`；`untested` 的 facet 不阻止 `stable`，但应在后续 R0 顺序 3 中优先出题。
 - R0 命中某 facet 时，无论对错都更新 `last_verified` 与 `state`，并产生 evidence。
@@ -127,7 +127,7 @@ knowledge_state:
       evidence_ids: []
 ```
 
-- 只有 `type: interview` 的 EV 能写进它的 `evidence_ids`；`state` 按 interview 的 `result` 更新（`passed` → `ok`，`partial`/`failed` → `decayed`）。
+- 只有 `type: interview` 的 EV 能写进它的 `evidence_ids`；`state` 按 interview 的 `result` 更新（`passed` → `ok`，`partial`/`failed` → `decayed`）。`result: passed` 还要 `followup: pass`，否则按 `EVIDENCE-FORMAT.md` 先改 result，不得直接标 `ok`。
 - 一个能力只列一条 `interview-expression` facet；不要按题目拆多条。
 
 ## 稳定性

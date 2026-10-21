@@ -103,3 +103,6 @@
 | 课刚结束就标 stable | 缺延迟证据 | 保持当前 `status`；在有延迟/交错正证据前不要标 `stability: stable` |
 | 强提示/答案揭示后直接 ADVANCE | 订正冒充独立修复 | 运行新的 P6/E-repair；未通过则 REPAIR/REINFORCE |
 | 无运行结果却标 execution strong | 状态超过证据 | 降为 unknown/partial，并引用真实 Verification 后再升级 |
+| 只读了配置变量，就把行为类能力记 execution passed | 探针类别错配 | 该 EV 不支撑 execution；维度保持 unknown |
+| followup 是 missing，result 却是 passed | 用了松的评分档 | 按 EVIDENCE-FORMAT 改成 partial，expression 不得 strong |
+| 首答命中失败模式，同题提示后改对仍 ADVANCE | 订正没换表面 | 当轮写待重试；同题 EV 最高 partial；决策至少 REINFORCE |

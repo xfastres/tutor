@@ -44,15 +44,15 @@
 0. 修复项：REVIEW-QUEUE 中以 `REPAIR：` 开头的项，以及上一课 plan「进度」未清的「待重试」——不看到期日。
    若它是今天内容的前置：没通过就不开新内容，先修。
 0.5 上次面试口述答崩的题（INTERVIEW-BANK 状态=已用-崩，或最近一次 interview 证据 failed）：口头重答一次，不另起新题。
-1. REVIEW-QUEUE 中 due 或 3 天内到期的项（可在 R0 中执行，结果回写该项；普通项在新概念课让位，顺延并写去向）
-2. KNOWLEDGE-STATE 中 stability: fragile，或任一 facet 为 decayed 的能力
+1. KNOWLEDGE-STATE 中任一 facet 为 decayed 的能力（先于到期日；新概念课的 1 个名额用在这里，不让给「今天的前置」）
+2. REVIEW-QUEUE 中 due 或 3 天内到期的项（可在 R0 中执行，结果回写该项；普通项在新概念课让位，顺延并写去向）
 3. 今天课程的前置，且 last_examined 最旧的能力（选一个 facet 出题）
 4. 与今天课程形成对照的旧概念（仅当能提升辨析）
 ```
 
 R0 用新表面，题干不含答案。结果必须回写：通道 A 项改 status；旧 KS 更新 facet `state` / `last_verified`、必要时 stability；产生 evidence（`task_id` 形如 `0009-R0a`，`source: review`）。
 
-**固定开场（v9.1 起）**：每节课（新概念课、练习课）在 R0 之后、讲解块之前，跑 1 道 **60 秒面试口述**（题库取题，优先上次课/弱 facet），按四段评分并记 `type: interview`。它不替代 R0，也不替代考官。
+**固定开场（v9.1 起）**：每节课（新概念课、练习课）在 R0 之后、讲解块之前，跑 1 道 **60 秒面试口述**。题考上面选中的那条旧能力；有 `decayed` facet 时题干就考它，不换相邻题。记 `type: interview`、`source: review`，按 `EVIDENCE-FORMAT.md` 定 `result`。它不替代 R0，也不替代考官。
 
 到期项当次没做不能静默，三选一：当次 R0 做掉；改 `deferred` 并写新的绝对到期日；保持 `due`、在 plan 进度行写「RQ-xxxx 顺延到下次开场」。
 
@@ -94,8 +94,8 @@ R0 用新表面，题干不含答案。结果必须回写：通道 A 项改 stat
 ```text
 频率：每 3 课一次；或连续两次开场都在还旧账、到期项 ≥ 上限时立即插入
 时长：15–30 分钟
-题源：INTERVIEW-BANK（混合旧新，含至少 1 道已用-崩题）+ RQ failed 的定向项
-规则：计时、无提示、不夹讲解；每题 60–120 秒作答，可追问 1 次
+题源：INTERVIEW-BANK 抽 5 题，旧:新 ≈ 2:1，knowledge/project/hr 各至少 1 题；另加 RQ failed 的定向项。已用-崩或 RQ failed 有则必含 1 题，没有不阻断
+规则：计时、无提示、不夹讲解；每题 60–120 秒作答，可追问 1 次。结果映射以 EVIDENCE-FORMAT.md 为准
 产出：interview 证据 + 报告（强项 / 崩点 / 回流 RQ 的 `REPAIR：` 项）+ 下一课建议
 不计入当课计分交互上限；模拟面自身就是一次会话
 ```

@@ -1,4 +1,4 @@
-# 门禁（Gates）v9.1
+# 门禁（Gates）v9.1.1
 
 本文件是五道门判据的**唯一来源**：`SKILL.md` 只列门名，`RUNBOOK.md` 只写执行顺序，`lesson-design.md` 只讲怎么设计课。判据冲突时以本文件为准，并回头修另一处。适用于 FULL 的 `NEW_CONCEPT`/`PRACTICE`/`REVIEW`/`MOCK`；轻量模式不走门。任一 gate 不过不结课，plan `gates` 写原因。
 
@@ -28,7 +28,7 @@
 - [ ] 讲解块在**对话里**出现过（只在 plan/HTML 里不算），先于任何针对本课新能力的计分题，一次发完；R0 与开场 60 秒口述只考旧知，可以出现在讲解块之前。
 - [ ] 7 元素齐全：真实场景 → 机制因果链 → 案例 A → 对照/反例 B（只改一个有意义变量）→ 边界/例外 → 怎么验证 → 一句话模型（结论+适用范围）。
 - [ ] 400–800 字、2–3 段；每段夹案例或对照；不堆定义与相邻术语。
-- [ ] 不含后续计分题答案原句/数值/关键词；计分边界题实例 ≠ 讲解实例。
+- [ ] 不含后续计分题的答案原句、数值、关键词，**也不含该题的结论**。结论是二元判断时（插入马上成功 / 要等），讲解只讲机制和案例，把判断留给计分题。只换表名不算新表面。计分边界题实例 ≠ 讲解实例。
 - [ ] 首题在讲解块之后；讲解后至少一次提取（P1 预测或复述）；矩阵「讲解段落」能指到段落，指不到就改标「一句带过」。
 - [ ] 实发讲解与 plan `teaching_block` 一致；不一致按实发回写 plan 并检查泄漏。
 - 豁免：`PRACTICE`/`REVIEW`/`MOCK`，条件是本课不引入新能力（目标已 `functional` 及以上，或只做变式/诊断/重测）；再教内容 ≤200 字定向反馈（现象→机制→模型→下一动作），仍不含后续计分题答案。需要 7 元素级新讲解 → 转 `NEW_CONCEPT`，本场按练习收尾。
@@ -41,12 +41,15 @@
 - [ ] ≥1 次无关键提示的独立生成/预测/诊断/操作；生成式/操作型使命 ≥1 真实产物；阶梯按 `lesson-design.md`（样例→补全→独立），每题只新增一个主要维度。
 - [ ] P5/迁移嵌入至少一个旧能力（矩阵「复用旧知」写旧能力+用途），不是同表面换皮；边界证据实例 ≠ 讲解实例。
 - [ ] 只读/沙箱可用即用：≥1 次真实执行并保存原始结果；不可用先对 Probes 三类再诚实降级。答案暴露/强提示/关键错误 → P6 新表面无提示重试（占 P 名额），复述不另计。
-- [ ] 每题后更新 plan 进度行（last_done/待重试）；文件写入留到课末批量做。
+- [ ] 首答命中答案钥匙的「失败模式」或错在决定性变量上：当轮把该 task 写进「待重试」，不再同题提示。同题提示后改对的 EV，`result` 最高 `partial`。
+- [ ] 行为类探针不可用时，不把配置/状态类读取记成该能力的 `execution: passed`；对应维度保持 `unknown`，S 条目不写成「会操作」。
+- [ ] 续课的新会话第一条先重跑恢复优先级（RUNBOOK §1），再从 last_done 续题。
+- [ ] 每题后更新 plan 进度行（last_done/待重试）；其余文件留到课末批量写。
 - 落盘：进度行+`gates.G3`+P6/待重试。不过：砍题到上限内；补 P5/边界/独立题；实操误判按探针表重判。
 
 ## G4 考官门（课末）
 
-- [ ] `NEW_CONCEPT`/`PRACTICE`/`REVIEW`：2–3 个计分题+可选 X（不计分、不计题数）；E-repair 占计分题名额。`MOCK` 按 `MEMORY-ENGINE.md` 模拟面协议 5–8 题、计时、追问 1 次，不受 2–3 限制。
+- [ ] `NEW_CONCEPT`/`PRACTICE`/`REVIEW`：2–3 个计分题+可选 X（不计分、不计题数）；E-repair 占计分题名额。`MOCK` 按 `MEMORY-ENGINE.md`「模拟面」抽 5 题，不受 2–3 限制。
 - [ ] 只考「讲到位」；「一句带过」只作 X；「未讲」不出题。
 - [ ] 新表面；边界/迁移实例 ≠ 课内实例；≥1 题测课内未充分验证的高价值维度。
 - [ ] 一题一次判：不得拆 b/c/d 多轮追问；失败后最多 1 次新表面重试，再不过 → `REPAIR`/`REINFORCE`。
@@ -59,8 +62,15 @@
 
 - [ ] evidence：`evidence/LNNNN.yaml` 一课一文件、课末一次写、含 `lesson_id`；EV 全局唯一、本课内连续（历史断档不补号；与 `WORKSPACE.yaml` 的 `last_ev` 对齐）。
 - [ ] 每条改变判断的 EV 有 `task_id`/`capability_id`/`assistance`/`result`/`type`/`source`；assistance 按作答前最强一句判，`unknown` 不用于升级，`answer_exposed` 只记纠正过程。
-- [ ] 面试证据：`type: interview`，四段（结论/原因/边界/例子）逐段结果，缺段记 `partial`；开场口述与 E-F 都入库。
-- [ ] KS：主能力与旧条目已更新；引用的 EV 存在；状态不超过独立性/执行方式/验证来源；facet 的 `state`/`last_verified` 有依据；`used_in` 回写（旧能力←本课 capability_id+evidence_id）；`expression` 维度按 interview 证据更新。
+- [ ] 面试证据：`type: interview`，`parts` 四键与 `followup` 都在，取值只有 `pass|partial|missing`；`result` 与 `EVIDENCE-FORMAT.md` 的映射一致；开场口述 `source: review`，开场口述与 E-F 都入库。
+- [ ] 机判，任一命中即 G5 失败，不得靠「门记录写了 pass」翻过：
+  - 同一条 EV 里 `followup: missing` 且 `result: passed`；
+  - `parts` 或 `followup` 出现 `pass|partial|missing` 以外的值；
+  - `assistance` 不是 `independent`，同题却 `result: passed`；
+  - facet `state: ok` 的 `evidence_ids` 里没有一条 `assistance: independent` 且 `result: passed`；
+  - `expression: strong` 所引的 interview 不是 `result: passed` 或 `followup` 不是 `pass`；
+  - 行为类探针不可用，却有 `type: execution` 且 `result: passed` 的 EV 被用来支撑该能力的 `execution`。
+- [ ] KS：主能力与被 R0/口述命中的旧条目都已更新（含 facet `state`、`last_verified`，不只是文件末尾注释）；引用的 EV 存在；状态不超过独立性/执行方式/验证来源；`used_in` 回写为对象（旧能力←本课 capability_id+evidence_id）；`expression` 按上面的 interview 证据更新。
 - [ ] RQ：到期项 `done`/`failed`/`deferred` 或写明去向；活动项≤上限；`REPAIR：` 项来源可追；KS `review_ref` 与活动项一致。
 - [ ] plan：`gates` G1–G5 逐项 pass/fail+原因；进度行 last_done/待重试/考官一致；结课仍有待重试 → 转 `REPAIR：` 项。
 - [ ] learning-record：Decision/Implications/probes/`examiner_result`（唯一存放处，含 `covered_points`）/`end_reason`（completed/budget_exceeded/fatigue/learner_stop）。

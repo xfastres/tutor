@@ -94,11 +94,14 @@ evidence:
 ## 面试口述证据（interview）
 
 - 结构固定四段：**结论 → 原因 → 边界 → 例子**。来源题目写进 `summary`（题库 id 或 URL + 题干一句话）。
-- `parts` 四个键必须齐：`conclusion`、`reason`、`boundary`、`example`，取值 `pass | partial | missing`。
-- `followup`：追加一次追问是否接住，取值 `pass | partial | missing`。追问只有一次机会，**不得夹带答案或方向**；带方向即按提示等级升级 `assistance`。
-- `result` 映射：四段 `pass` 且 `followup: pass` → `passed`；缺 1 段、或 `reason` 只到 `partial`、或追问 `partial` → `partial`；结论错、`reason: missing`、或讲不成句 → `failed`。
-- 四段里 `reason` 是门槛：`reason` 缺失/错误时，即使结论对也不能记 `passed`，也不得作为 `conceptual_understanding` 证据。
-- 只给结论的 `interview`（`reason: missing`）按 `explanation` 的同一规则处理，`result: partial`。
+- `parts` 四个键必须齐：`conclusion`、`reason`、`boundary`、`example`。**合法取值只有** `pass | partial | missing`。`failed`、`ok`、分数都是非法值：出现即该文件 G5 失败，先改写再结课。
+- `followup`：追加一次追问是否接住，取值同样只有 `pass | partial | missing`。追问只有一次机会，**不得夹带答案或方向**；带方向即按提示等级升级 `assistance`。没追问写 `missing`，不得省略这个键。
+- **`result` 映射以本节为唯一判据**（`EXAMINER.md`、`INTERVIEW-BANK-FORMAT.md` 不再各自定义通过）：
+  - 四段全是 `pass` 且 `followup: pass` → `passed`；
+  - 任一四段为 `missing`，或 `reason` 不是 `pass`，或结论错、讲不成句 → `failed`；
+  - 其余（没做追问，或某一段只到 `partial` 但结论和原因都在）→ `partial`。
+- `followup: missing` 与 `result: passed` 不得出现在同一条 EV。没追问，最高 `partial`。
+- 四段里 `reason` 是门槛：`reason` 不是 `pass` 时，即使结论对也不能记 `passed`，也不得作为 `conceptual_understanding` 证据。只给结论（`reason: missing`）按上面映射记 `failed`。
 - 提示或答案揭示后重新口述：按 `assistance` 记 `strong_hint` / `answer_exposed`，复述不得记 `passed`（见「支撑程度」）。
 - 同一道题隔课复测要新 `EV`（新 `task_id`），不复用旧条目。
 
@@ -120,7 +123,9 @@ evidence:
 
 关键答案暴露后，必须由新的 `task_id` 产生一个未见变形的 `independent` 重试证据；不能把同题订正改写为独立成功。变形须换业务情境或关键条件，不只换数字、变量名、表名；完整分支见 `lesson-design.md` §5.2。
 
-同一 task 的多轮订正只记一条 EV：不填 `attempts`，把轮次与轨迹写进 `summary`（如「第 2 轮在 light_hint 后改对」），`assistance` 取用过的最强等级；新表面重试另起 `task_id`（P6 或新 E 编号）才记新 EV。X 探测（不计分）不建 EV，只写进 learning-record 的 probes。
+同一 task 的多轮订正只记一条 EV：不填 `attempts`，把轮次与轨迹写进 `summary`（如「第 2 轮在 light_hint 后改对」），`assistance` 取用过的最强等级。**这条 EV 的 `result` 不得为 `passed`**：同题订正最高记 `partial`，并在作答当轮把该 task 写进 plan「待重试」。新表面重试另起 `task_id`（P6 或新 E 编号）且 `assistance: independent`，才可以记 `passed`。
+
+关键错误不需要老师把答案说完才算。首答命中该题答案钥匙里的「失败模式」，或错在矩阵的决定性变量上，立即进「待重试」，不适用「同题最多 2 级提示」。X 探测（不计分）不建 EV，只写进 learning-record 的 probes。
 
 v8.6 之前没有 `assistance` 的历史 Evidence 不要批量改写。能从原始学习记录确认支撑程度时按纠错流程补齐；无法确认时视为 `assistance: unknown`，不得单独用于新的状态升级。
 

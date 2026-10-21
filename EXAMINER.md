@@ -17,7 +17,7 @@
 ## 题量与形态
 
 - 常规课（`NEW_CONCEPT` / `PRACTICE` / `REVIEW`）：**2–3 个计分任务** + 可选 X 探测。X 不计分、不计入题数；E-repair 占计分题名额。
-- `MOCK` 模拟面：按 `MEMORY-ENGINE.md` 模拟面协议 5–8 题，不受 2–3 题限制（见 §模拟面）。
+- `MOCK` 模拟面：按 `MEMORY-ENGINE.md`「模拟面」抽 5 题，不受 2–3 题限制（见 §模拟面）。
 - 开场 60 秒面试口述是延迟考官，不计入课末 2–3 题（见 §面试口述评分）。
 - 每题在 plan 里标明覆盖的矩阵项目；一题可覆盖多个相关项目，但无独立信息增量的重复题不算多份证据。
 
@@ -64,19 +64,14 @@ X  — 探测（不计分）：矩阵里「一句带过」的项目，只用于�
 - 边界：什么时候不成立、例外或取舍。
 - 例子：真实的项目/场景/数据（不能只说「比如」）。
 
-评分：
-
-- 四段齐全、机制正确 = `passed`，可作 `expression` 维度与对应 capability 的证据。
-- 缺 1–2 段或段内机制错误 = `partial`；`type: interview`，summary 写清缺哪段。
-- 只有结论 / 背定义 = `partial` 或 `failed`（按 `EVIDENCE-FORMAT.md`），不算解释证据。
-- 口述流畅不能代替四段；口述证据不替代生成/实操证据。
+评分只执行 `EVIDENCE-FORMAT.md`「面试口述证据」的 `result` 映射，本文件不另定通过线：四段全 `pass` 且追问 `pass` 才是 `passed`；没追问最高 `partial`；缺段或 `reason` 不是 `pass` 为 `failed`。`passed` 才进 `expression` 的 strong 候选。口述流畅不能代替四段，口述证据不替代生成/实操证据。
 
 两种用法：
 
-- **开场口述**（下节课 1 题，题库取题，优先上次课/弱 facet）：按四段评分，记 `source: review` 的 interview 证据，更新对应 KS 的 `expression` 与 facet；答崩 → 列入下节课 R0 或建 `REPAIR：` 项。
+- **开场口述**（下节课 1 题）：题必须考 R0 选中的那条旧能力；该能力有 `decayed` facet 时，题干就考这个 facet，不换一道相邻题。记 `source: review`（写 `lesson` 算记错）。`result: passed` 才把该 facet 维持 `ok`；`partial` 或 `failed` 把命中的 facet 改为 `decayed`、更新 `last_verified`，并列入下节课 R0 或建 `REPAIR：` 项。只在文件末尾写注释不算更新。
 - **课末 E-F**（面试/考核类使命必选）：从题库取 1 道与本课矩阵相关的真题，计入 2–3 个计分题；答崩同样回流题库状态与 RQ。
 
-题库没有可用题时，先从 `RESOURCES.md` 的 Wisdom 真题补入 `INTERVIEW-BANK.md`（标来源与可信度），不得把自编题冒充真题。
+题库没有可用的 `official` 或已核对 `curated` 题时，先从 `RESOURCES.md` 的 Wisdom 真题补入。官方源本次不可达：本课不新增计分口述，不开新的计分 E-F，不得把自建题或未核对的博客题标成 `curated` 后判分。
 
 ## 覆盖不足时不要提前判定
 
@@ -112,8 +107,8 @@ X  — 探测（不计分）：矩阵里「一句带过」的项目，只用于�
 ## 模拟面（MOCK）
 
 - 频率：每 3 课，或复习债信号时立即插入；15–30 分钟。
-- 题源：`INTERVIEW-BANK.md`（含至少 1 道已用-崩题）+ RQ `failed` 的定向项；混合旧新能力。
-- 5–8 题，每题 60–120 秒，可追问 1 次；计时、无提示、不夹讲解。
+- 题源与题量以 `MEMORY-ENGINE.md`「模拟面」为唯一口径：5 题，旧:新 ≈ 2:1，`knowledge`/`project`/`hr` 各至少 1 题；有「已用-崩」或 RQ `failed` 时必含 1 题，没有不阻断开场。
+- 每题 60–120 秒，可追问 1 次；计时、无提示、不夹讲解。
 - 每题按 §面试口述评分 的四段标准记 interview 证据；不另设 P 阶梯。
 - 产出写进 learning-record：报告（强项 / 崩点 / 回流 RQ 的 `REPAIR：` 项 / 下一课建议）+ 一条 `examiner_result`（五选一决策，target=最弱维度，`covered_points` 合并各题矩阵项）。
 - 模拟面自身是一次会话，不计入常规课的 2–3 题与计分交互上限（见 `MEMORY-ENGINE.md`）。
