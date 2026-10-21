@@ -52,7 +52,7 @@
 
 R0 用新表面，题干不含答案。结果必须回写：通道 A 项改 status；旧 KS 更新 facet `state` / `last_verified`、必要时 stability；产生 evidence（`task_id` 形如 `0009-R0a`，`source: review`）。
 
-**固定开场（v9.1 起）**：每节课（新概念课、练习课）在 R0 之后、讲解块之前，跑 1 道 **60 秒面试口述**。题考上面选中的那条旧能力；有 `decayed` facet 时题干就考它，不换相邻题。记 `type: interview`、`source: review`，按 `EVIDENCE-FORMAT.md` 定 `result`。它不替代 R0，也不替代考官。
+**固定开场（v9.1 起）**：面试线未写「不适用」时，每节课（新概念课、练习课）在 R0 之后、讲解块之前，跑 1 道 **60 秒面试口述**。写「不适用」则不排每课口述和 E-F。题考上面选中的那条旧能力；有 `decayed` facet 时题干就考它，不换相邻题。记 `type: interview`、`source: review`，按 `EVIDENCE-FORMAT.md` 定 `result`。它不替代 R0，也不替代考官。R0 项数只以 `GATES.md` 计分交互为准。
 
 到期项当次没做不能静默，三选一：当次 R0 做掉；改 `deferred` 并写新的绝对到期日；保持 `due`、在 plan 进度行写「RQ-xxxx 顺延到下次开场」。
 

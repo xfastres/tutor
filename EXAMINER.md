@@ -68,8 +68,8 @@ X  — 探测（不计分）：矩阵里「一句带过」的项目，只用于�
 
 两种用法：
 
-- **开场口述**（下节课 1 题）：题必须考 R0 选中的那条旧能力；该能力有 `decayed` facet 时，题干就考这个 facet，不换一道相邻题。记 `source: review`（写 `lesson` 算记错）。`result: passed` 才把该 facet 维持 `ok`；`partial` 或 `failed` 把命中的 facet 改为 `decayed`、更新 `last_verified`，并列入下节课 R0 或建 `REPAIR：` 项。只在文件末尾写注释不算更新。
-- **课末 E-F**（面试/考核类使命必选）：从题库取 1 道与本课矩阵相关的真题，计入 2–3 个计分题；答崩同样回流题库状态与 RQ。
+- **开场口述**（面试线未写「不适用」时，下节课 1 题；写「不适用」则不排）：题必须考 R0 选中的那条旧能力；该能力有 `decayed` facet 时，题干就考这个 facet，不换一道相邻题。记 `source: review`（写 `lesson` 算记错）。`result: passed` 才把该 facet 维持 `ok`；`partial` 或 `failed` 把命中的 facet 改为 `decayed`、更新 `last_verified`，并列入下节课 R0 或建 `REPAIR：` 项。只在文件末尾写注释不算更新。
+- **课末 E-F**（面试线未写「不适用」时，面试/考核类使命必选；写「不适用」则不排）：从题库取 1 道与本课矩阵相关的真题，计入 2–3 个计分题；答崩同样回流题库状态与 RQ。
 
 题库没有可用的 `official` 或已核对 `curated` 题时，先从 `RESOURCES.md` 的 Wisdom 真题补入。官方源本次不可达：本课不新增计分口述，不开新的计分 E-F，不得把自建题或未核对的博客题标成 `curated` 后判分。
 
