@@ -1,4 +1,4 @@
-# Tutor — Teach Hybrid v9.1（中文版）
+# Tutor — Teach Hybrid v9.1.2（中文版）
 
 调用：`/tutor <想学什么 | 继续 | 考我 L0008 | 复习 | 摸底 | 模拟面>`
 
@@ -16,8 +16,8 @@ v9.1 的一句话：**先讲明白，再练到会，最后考到稳；用真实�
 
 ```text
 新主题    /tutor 我想系统学 Redis，目标是面试      → 建 learning/<topic>/ workspace，先写 MISSION（含面试线），再开第一课
-继续      /tutor 继续                               → 读 WORKSPACE → MISSION → 课型判定 → plan → 面试口述 → RQ，按 RUNBOOK 恢复优先级开课
-考我      /tutor 考我 L0008                         → 只跑该课 Examiner（面试类含 E-F）
+继续      /tutor 继续                               → 读 WORKSPACE → MISSION → 课型判定 → plan → RQ，按 RUNBOOK 恢复优先级开课；面试线未写「不适用」时含口述
+考我      /tutor 考我 L0008                         → 只跑该课 Examiner（面试线未写「不适用」时含 E-F）
 复习      /tutor 复习                               → 不开新课，清到期项与 decayed facet
 模拟面    /tutor 模拟面                             → 题库 + RQ 崩题抽题，计时无提示，输出报告
 ```
@@ -28,9 +28,10 @@ v9.1 的一句话：**先讲明白，再练到会，最后考到稳；用真实�
 |---|---|
 | `SKILL.md` | 入口。课型、规则、五道门 |
 | `RUNBOOK.md` | **每次完整课都读**。开场、课型、课中顺序、写入集、面试题采集 |
-| `GATES.md` | **五道门判据的唯一来源**：结构/讲解/练习/考官/证据 |
+| `GATES.md` | **五道门判据的唯一来源**：结构/讲解/练习/考官/证据；计分交互只以这里为准 |
+| `scripts/check-gates.py` | 结课前只读机判。打印 ERROR/WARN，不写 workspace |
 | `lesson-design.md` | 写课时。讲解块、矩阵、练习阶梯、样例→补全→独立、plan 模板、两种页面 |
-| `EXAMINER.md` | 课末考官。2–3 题、E-F 面试追问、X 探测、决策语义 |
+| `EXAMINER.md` | 课末考官。2–3 题、X 探测、决策语义；面试线未写「不适用」时含 E-F |
 | `INTERVIEW-BANK-FORMAT.md` | 题库格式与采集/使用协议（课后入库、下节课口述、模拟面） |
 | `MEMORY-ENGINE.md` | 复习。两条通道、模拟面、螺旋复用、复习债上限 |
 | `learning-engine.md` | 学习怎么发生。证据阶梯、欠/过拟合、反馈、facet、流畅度 vs 存储、ZPD 判定 |
@@ -49,7 +50,7 @@ WORKSPACE.yaml + MISSION(含面试线) + KS/facets + 到期 RQ + 面试题库
 → 定课型（NEW_CONCEPT / PRACTICE / REVIEW / MOCK）
 → 开场：R0（按 `GATES.md`）+ 面试线未写「不适用」时 1 道 60 秒面试口述（题库）
 → 新概念课：讲解块（7 元素，400–800 字）→ 完整样例 → 补全 → 独立 → 边界/迁移(嵌入旧知) → 实操
-→ 考官 2–3 题（只考讲到位；面试类 E-F 必选）
+→ 考官 2–3 题（只考讲到位；面试线未写「不适用」时 E-F 必选）
 → 课末一次写入：evidence/LNNNN.yaml、KS、RQ、LR、plan gates、面试题库
 → 课后 5 分钟：检索真实面试题 2–4 道入库
 → 下节课 R0/口述取用；每 3 课模拟面；崩题回流 RQ
@@ -70,12 +71,13 @@ WORKSPACE.yaml + MISSION(含面试线) + KS/facets + 到期 RQ + 面试题库
 - **v9.1（本次）**：
   - **讲解优先**：课型二分（新概念课先讲后测 / 练习复习课先测后讲）；新增「讲解块」7 元素契约（400–800 字、位于任何计分题之前、每段夹案例/对照）；新增 **G2 讲解门**；「不生成文字墙」改写为「不得压缩讲解、也不得写纯理论长篇」。
   - **反题海**：计分交互只以 `GATES.md` 为准（一个教学块 ≤6，计划时最多先排 5 个），考官 2–3 题、不再一题拆 b/c/d 多轮；RQ 普通项不挤占新概念课；讲不清 / 讲太少按 DIAGNOSTICS 处置。
-  - **面试管线**：新增 `INTERVIEW-BANK-FORMAT.md` 与 `INTERVIEW-BANK.md`；每课末采集 2–4 道真实面试题（来源 URL + 可信度 + 关联 S/facet）；下节课 1 道 60 秒四段口述（结论→原因→边界→例子）；每 3 课一次模拟面；崩题回流 `REPAIR：`；新增 `type: interview` 证据与 `expression` 维度。
+  - **面试管线**：新增 `INTERVIEW-BANK-FORMAT.md` 与 `INTERVIEW-BANK.md`；每课末采集 2–4 道真实面试题（来源 URL + 可信度 + 关联 S/facet）；面试线未写「不适用」时，下节课 1 道 60 秒四段口述（结论→原因→边界→例子）；每 3 课一次模拟面；崩题回流 `REPAIR：`；新增 `type: interview` 证据与 `expression` 维度。写「不适用」则不排每课口述和 E-F。
   - **螺旋复用**：矩阵新增「复用旧知」行；P5 必须嵌入旧能力；旧 KS 的 `used_in` 回写；每 3 课模拟面混合旧新。
   - **五道门**：四道门扩为结构/讲解/练习/考官/证据五道，判据、落盘产物、不过处置统一到 `GATES.md`；plan 增加 `课型 / teaching_block / 预算 / 门记录 / 复用旧知`。
   - **记账瘦身**：证据改为一课一文件 `evidence/LNNNN.yaml`（课末一次写，不再每答一题写一次）；`attempts` 降级、`verification_ref` 仅 execution 必填；plan 答案钥匙加「必须点/常见半对/失败模式」。
   - **交付**：HTML 拆「讲解页（可课前，无答案）」与「复习页（考官后，含真实错误）」；对话优先时讲解块必须在对话里出现。
   - 迁移：`workspace.md` §「从 v9.0 迁移到 v9.1」。
 - **v9.1.1**：不改课型。收口 jobs四审计里的冲突与逃逸：口述 `result` 只以 `EVIDENCE-FORMAT.md` 为准（没追问最高 `partial`）；模拟面固定 5 题，已用-崩「有则必含、没有不阻断」；`decayed` facet 先于今日前置，开场口述考同一条；G2 禁止讲解说死计分题结论；G5 增加六条机判失败（含同题订正不得 `passed`、facet `ok` 必须有独立证据）；官方源不可达时不新增计分题。
+- **v9.1.2**：计分交互只以 `GATES.md` 为唯一定义（一个教学块 ≤6，计划时最多先排 5 个给重试留位，重试不可取消）；其他文件不再另写一套数字。面试线写「不适用」时不排每课口述和 E-F。新增只读机判 `scripts/check-gates.py`。
 
 目标不是更大的题库，而是一个「因学习者证据变化而改变后续教学」的学习系统——**并且每节课都真的把东西讲明白。**
