@@ -7,6 +7,8 @@
 - **Decision:** ADVANCE | REINFORCE | REPAIR | REVIEW | REVISIT（考官类记录必填）
 - **Probes:** 0008-X1 Using index condition 分类对、机制未说出 → 候选下一课（可选）
 - **Implications:** 下一 ZPD 步、要带回的旧知识、是否追加 S id
+- **end_reason:** `completed` | `budget_exceeded` | `fatigue` | `learner_stop`（会话结束原因，可选）
+- **Gates:** G1–G5 的 pass/fail；fail 附一句原因（可选，与 plan `gates` 同源）
 
 考官类记录末尾附 `EXAMINER.md` 输出契约的 `examiner_result` yaml 块；这是它唯一的存放处。
 
