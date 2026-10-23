@@ -289,6 +289,9 @@ def is_examiner(ev: dict) -> bool:
 
 
 def interview_ok(ev: dict) -> bool:
+    if "corrected" in ev:
+        # a system-fault correction never supports expression strong
+        return False
     parts = ev.get("parts")
     if not isinstance(parts, dict):
         return False
@@ -298,6 +301,9 @@ def interview_ok(ev: dict) -> bool:
 
 
 def supports_independent_pass(ev: dict) -> bool:
+    if "corrected" in ev:
+        # a system-fault correction never supports facet ok
+        return False
     return ev.get("assistance") == "independent" and ev.get("result") == "passed"
 
 
@@ -507,7 +513,7 @@ def protocol_lesson(number, meta) -> bool:
     if number is None:
         return False
     protocol = str((meta or {}).get("protocol") or "")
-    if protocol in ("v9.1.1", "9.1.1"):
+    if protocol in ("v9.1.1", "9.1.1", "v9.1.2", "9.1.2", "v9.2", "9.2", "v9.3", "9.3"):
         return number >= 14
     return False
 
