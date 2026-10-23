@@ -513,7 +513,18 @@ def protocol_lesson(number, meta) -> bool:
     if number is None:
         return False
     protocol = str((meta or {}).get("protocol") or "")
-    if protocol in ("v9.1.1", "9.1.1", "v9.1.2", "9.1.2", "v9.2", "9.2", "v9.3", "9.3"):
+    if protocol in (
+        "v9.1.1",
+        "9.1.1",
+        "v9.1.2",
+        "9.1.2",
+        "v9.2",
+        "9.2",
+        "v9.3",
+        "9.3",
+        "v9.4",
+        "9.4",
+    ):
         return number >= 14
     return False
 
@@ -542,19 +553,37 @@ def plan_r0_targets(text: str):
     return targets
 
 
-def interview_na(workspace: Path, report: Report) -> bool:
+def interview_enabled(workspace: Path) -> bool:
+    """Opt-in interview training. Unique source: MISSION-FORMAT.md 「面试模式」.
+
+    Missing or empty 面试线 is OFF. Explicit 不适用 is OFF.
+    Grandfather: any **S-I* success criterion, or a 面试线 that schedules
+    oral/mock practice without 不适用, is ON.
+    """
     mission = workspace / "MISSION.md"
     if not mission.is_file():
         return False
     text = mission.read_text(encoding="utf-8")
     section = re.search(r"面试线(.*?)(\n## |\Z)", text, re.S)
-    if not section:
-        # current mysql mission keeps the line under Constraints
-        for line in text.splitlines():
-            if "面试线" in line and "不适用" in line:
-                return True
-        return False
-    return "不适用" in section.group(1)
+    if section:
+        body = section.group(1)
+        if "不适用" in body:
+            return False
+        if re.search(r"S-I\d", body) or re.search(r"适用|模拟口述|模拟面|求职", body):
+            return True
+    for line in text.splitlines():
+        if "面试线" in line and "不适用" in line:
+            return False
+    if re.search(r"\*\*S-I\d+", text):
+        return True
+    for line in text.splitlines():
+        if "面试线" in line and "不适用" not in line and re.search(r"模拟|口述|面试", line):
+            return True
+    return False
+
+
+def interview_na(workspace: Path, report: Report) -> bool:
+    return not interview_enabled(workspace)
 
 
 def planned_counts(text: str):
@@ -681,8 +710,60 @@ def check_plans(workspace: Path, by_lesson, meta, report: Report):
                 report.error("%s plan NEW_CONCEPT R0=%d, want 1" % (lesson, counts["r0"]))
             if kind in ("PRACTICE", "REVIEW") and counts["r0"] > 3:
                 report.error("%s plan %s R0=%d > 3" % (lesson, kind, counts["r0"]))
-        if na and re.search(r"面试口述：(?!不排)|E-F", text):
-            report.warn("%s interview track is 不适用 but plan still mentions oral/E-F" % lesson)
+        if na and re.search(r"(面试口述(?!：不排)|E-F)", text):
+            report.warn("%s interview mode is off but plan still mentions oral/E-F" % lesson)
+
+
+def check_review_queue(workspace: Path, report: Report):
+    """Active RQ rows must point at a knowledge id that has a KS file."""
+    path = workspace / "REVIEW-QUEUE.md"
+    if not path.is_file():
+        return
+    ks_ids = set()
+    ks_dir = workspace / "KNOWLEDGE-STATE"
+    if ks_dir.is_dir():
+        for item in ks_dir.glob("*.yaml"):
+            ks_ids.add(item.stem)
+    text = path.read_text(encoding="utf-8")
+    for line in text.splitlines():
+        if not line.strip().startswith("|"):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if not cells or not re.match(r"RQ-\d+", cells[0]):
+            continue
+        status = cells[4].lower() if len(cells) > 4 else ""
+        if status in ("done", "failed", "status"):
+            continue
+        kid = cells[1] if len(cells) > 1 else ""
+        if not kid or kid in ("知识 ID", "---", "----"):
+            continue
+        if ks_ids and kid not in ks_ids:
+            report.error("REVIEW-QUEUE %s knowledge_id %s has no KNOWLEDGE-STATE file" % (cells[0], kid))
+
+
+def check_routing_contract(skill_md: Path, failures: list):
+    """Deterministic: SKILL.md still lists the v9.4 entry routes."""
+    if not skill_md.is_file():
+        failures.append("routing: SKILL.md missing")
+        return
+    text = skill_md.read_text(encoding="utf-8")
+    if "## 入口路由" not in text:
+        failures.append("routing: missing 入口路由 heading")
+    required = (
+        "继续 / 下一课 / 接着上次",
+        "开始训练",
+        "我想学 X / 新主题",
+        "讲讲 X / 这题为什么",
+        "考我",
+        "模拟面",
+        "今天只听",
+        "15 分钟",
+        "不要出题",
+        "面试模式默认关",
+    )
+    for token in required:
+        if token not in text:
+            failures.append("routing: SKILL.md missing %s" % token)
 
 
 def check_g5_claims(workspace: Path, report: Report):
@@ -711,6 +792,7 @@ def check_workspace(workspace: Path) -> Report:
     check_expression(ks, by_id, report)
     check_facet_ok(ks, by_id, report)
     check_plans(workspace, by_lesson, meta if isinstance(meta, dict) else {}, report)
+    check_review_queue(workspace, report)
     check_g5_claims(workspace, report)
     claimed = []
     lessons = workspace / "lessons"
@@ -851,7 +933,7 @@ def self_test() -> int:
 
     failures = []
 
-    def run_case(name, mutate, expect_error, forbid=()):
+    def run_case(name, mutate, expect_error, forbid=(), expect_warn=()):
         with tempfile.TemporaryDirectory(prefix="tutor-gate-") as tmp:
             root = Path(tmp)
             write_fixture(root)
@@ -860,6 +942,7 @@ def self_test() -> int:
             report = check_workspace(root)
             after, nfiles2 = snapshot(root)
             blob = "\n".join(report.errors)
+            warn_blob = "\n".join(report.warns)
             if before != after or nfiles != nfiles2:
                 failures.append(name + ": fixture hash changed")
             missing = [token for token in expect_error if token not in blob]
@@ -868,6 +951,9 @@ def self_test() -> int:
             banned = [token for token in forbid if token in blob]
             if banned:
                 failures.append(name + ": unexpected " + ",".join(banned) + "\n" + blob)
+            missing_w = [token for token in expect_warn if token not in warn_blob]
+            if missing_w:
+                failures.append(name + ": missing warn " + ",".join(missing_w) + "\n" + warn_blob)
 
     def noop(_root):
         return None
@@ -982,6 +1068,101 @@ def self_test() -> int:
             failures.append("bad-yaml: expected non-zero")
         elif not any("YAML parse failed" in item for item in report.errors):
             failures.append("bad-yaml: parse error not reported: " + " | ".join(report.errors))
+
+    def interview_off(root: Path):
+        (root / "MISSION.md").write_text("# Mission\n\n## Why\n\nlearn sql\n", encoding="utf-8")
+
+    run_case(
+        "interview-off-missing-section",
+        interview_off,
+        [],
+        [],
+        ["interview mode is off"],
+    )
+
+    def interview_na_section(root: Path):
+        (root / "MISSION.md").write_text("# Mission\n\n## 面试线\n\n不适用\n", encoding="utf-8")
+
+    run_case(
+        "interview-off-explicit-na",
+        interview_na_section,
+        [],
+        [],
+        ["interview mode is off"],
+    )
+
+    def interview_on_si(root: Path):
+        (root / "MISSION.md").write_text(
+            "# Mission\n\n## Success\n\n- **S-I1** 能 60 秒讲清锁\n",
+            encoding="utf-8",
+        )
+        (root / "lessons" / "0001-demo.plan.md").write_text(
+            "# L0001\n课型：NEW_CONCEPT\n进度：last_done=— | 考官=未开始\n",
+            encoding="utf-8",
+        )
+
+    run_case("interview-on-si-grandfather", interview_on_si, [], ["interview mode is off"])
+
+    def rq_dangling(root: Path):
+        (root / "REVIEW-QUEUE.md").write_text(
+            "| id | 知识 ID | due | 做什么 | status | 结果 |\n"
+            "|----|---------|-----|--------|--------|------|\n"
+            "| RQ-0099 | missing-cap | 2026-10-24 | REPAIR：x | scheduled | |\n",
+            encoding="utf-8",
+        )
+
+    run_case("rq-dangling", rq_dangling, ["RQ-0099", "missing-cap"])
+
+    def ks_missing_ev(root: Path):
+        ks = (root / "KNOWLEDGE-STATE" / "main.yaml").read_text(encoding="utf-8")
+        ks = ks.replace('evidence_ids: ["EV-0004"]', 'evidence_ids: ["EV-9999"]')
+        ks = ks.replace('evidence_ids: ["EV-0003"]', 'evidence_ids: ["EV-9999"]')
+        (root / "KNOWLEDGE-STATE" / "main.yaml").write_text(ks, encoding="utf-8")
+
+    run_case("ks-cites-missing-ev", ks_missing_ev, [], [], ["EV-9999 not loaded"])
+
+    def old_protocol(root: Path):
+        (root / "WORKSPACE.yaml").write_text(
+            "timezone: Asia/Shanghai\nprotocol: v9.0\nlast_ev: 10\n",
+            encoding="utf-8",
+        )
+        (root / "evidence" / "L0001.yaml").write_text(
+            "lesson_id: \"L0001\"\nevidence:\n"
+            + "\n".join(
+                [
+                    '  - id: "EV-10%d"\n    task_id: "0001-P%d"\n    capability_id: "main"\n    facet_id: null\n    type: "prediction"\n    result: "passed"\n    source: "lesson"\n    assistance: "independent"'
+                    % (i, i)
+                    for i in range(1, 8)
+                ]
+            ),
+            encoding="utf-8",
+        )
+
+    run_case("old-protocol-no-block-cap", old_protocol, [], ["scoring interactions 7 > 6"])
+
+    def missing_field(root: Path):
+        (root / "KNOWLEDGE-STATE" / "broken.yaml").write_text(
+            "knowledge_state:\n  id: [\n    - broken",
+            encoding="utf-8",
+        )
+
+    run_case("missing-field-yaml", missing_field, ["YAML parse failed"])
+
+    def resume_unfinished(root: Path):
+        (root / "lessons" / "0004-resume.plan.md").write_text(
+            "\n".join([
+                "# L0004",
+                "课型：NEW_CONCEPT",
+                "教学深度：standard",
+                "进度：last_done=0004-P2 | 待重试=— | 考官=未开始",
+                "",
+            ]),
+            encoding="utf-8",
+        )
+
+    run_case("resume-unfinished-plan", resume_unfinished, [], ["L0004 scoring"])
+
+    check_routing_contract(skill_root() / "SKILL.md", failures)
 
     if failures:
         print("SELF-TEST FAIL")

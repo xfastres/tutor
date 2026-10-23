@@ -56,7 +56,7 @@ workspace 是持久状态。一个 workspace 一个使命；并行多个不相�
 - **learning-records/**：只为「持久且影响决策」的变化写。按 `LEARNING-RECORD-FORMAT.md`。
 - **lessons/*.plan.md**：写课前写；含课型、`teaching_block`、预算、五道门记录位；考官后补 X 探测结果与盲区变化。模板见 `lesson-design.md` §12.3。
 - **lessons/*.html**：学习者页面。**讲解页**（可课前生成，只含讲解与案例，不含答案）；**复习页**（考官后生成，含学习者真实错误与纠正）。离线课件模式在课前生成并带导出。
-- **INTERVIEW-BANK.md**：真实面试题库。按 `INTERVIEW-BANK-FORMAT.md`；题面给学习者，完整答题要点放 plan 侧，不泄题。每课末补 2–4 题，下节课口述取 1 题，每 3 课模拟面抽题。
+- **INTERVIEW-BANK.md**：真实面试题库。仅面试模式启用时每课末补题、下节课口述、每 3 课模拟面。启用条件见 `MISSION-FORMAT.md`。
 - **reference/**：课程产出的压缩知识；不要把整节课复制进去。
 - **NOTES.md**：偏好（答题风格、验收方式、偏好的业务类比）与运营日志（“10-10：v9 迁移完成”）。不放状态。
 - **assets/**：首次创建时把 skill 的 `assets/lesson.css`、`theme.js`、`practice.js` 拷贝进来。HTML 在样式表之前加载 `theme.js`。同仓库多个 workspace 可用 `@import` 引 skill 的规范样式，相对路径按深度重算。
@@ -106,6 +106,10 @@ last_ev: 0            # 已分配的最大 EV 编号；下一课从这里 +1 开
 ## 课程排序
 
 不要求单独的大纲文件。顺序来自：`MISSION + 学习记录 + KS/facets + 摸底或题库 + ZPD`。避免无视学习者证据的死板大纲。
+
+## 从 v9.3 迁移到 v9.4
+
+无结构迁移，**不改历史 Evidence / KS / RQ**。`WORKSPACE.yaml` 的 `protocol` 可改 `v9.4`（不改也不追溯）。新课 plan 多一行 `教学深度`。面试模式按 `MISSION-FORMAT.md` 解释已有 MISSION：已有 `S-I*` 或非「不适用」的面试安排 → 保持启用；本节缺失且无 `S-I*` → 视为关闭，不要补写面试线。新课按入口路由与深度档走；历史课不重审。
 
 ## 从 v9.1.x 迁移到 v9.3
 
