@@ -100,7 +100,8 @@ evidence:
   - 四段全是 `pass` 且 `followup: pass` → `passed`；
   - 任一四段为 `missing`，或 `reason` 不是 `pass`，或结论错、讲不成句 → `failed`；
   - 其余（没做追问，或某一段只到 `partial` 但结论和原因都在）→ `partial`。
-- `followup: missing` 与 `result: passed` 不得出现在同一条 EV。没追问，最高 `partial`。
+- `followup: missing` 与 `result: passed` 不得出现在同一条 EV。没追问，最高 `partial`。追问必须在作答同一轮发出；没追问就记 `missing`，不跨会话补问，不要求学习者重答。
+- 四段与 `parts` 只用于 `type: interview`。预测/边界/解释题按题面过线行判（`GATES.md`「作答成本与反馈」），不按四段扣分。
 - 四段里 `reason` 是门槛：`reason` 不是 `pass` 时，即使结论对也不能记 `passed`，也不得作为 `conceptual_understanding` 证据。只给结论（`reason: missing`）按上面映射记 `failed`。
 - 提示或答案揭示后重新口述：按 `assistance` 记 `strong_hint` / `answer_exposed`，复述不得记 `passed`（见「支撑程度」）。
 - 同一道题隔课复测要新 `EV`（新 `task_id`），不复用旧条目。
@@ -128,6 +129,22 @@ evidence:
 关键错误不需要老师把答案说完才算。首答命中该题答案钥匙里的「失败模式」，或错在矩阵的决定性变量上，立即进「待重试」，不适用「同题最多 2 级提示」。X 探测（不计分）不建 EV，只写进 learning-record 的 probes。
 
 v8.6 之前没有 `assistance` 的历史 Evidence 不要批量改写。能从原始学习记录确认支撑程度时按纠错流程补齐；无法确认时视为 `assistance: unknown`，不得单独用于新的状态升级。
+
+## 系统失误修正（corrected）
+
+记账错误（漏追问却记 `passed`、同题提示后记 `passed`、口述目标写错）由 `GATES.md` G5「系统失误修正」触发：只改单条 EV，不重写历史，**不要求学习者重答**。
+
+```yaml
+  - id: "EV-0088"
+    # 其余字段原样保留
+    result: "partial"            # 改成本文件映射应得的值
+    corrected:                   # 块式写法；校验器不解析 {} 行内写法
+      at: "2026-10-24T09:00:00+08:00"
+      from: "passed"
+      reason: "followup missing；按面试口述映射应为 partial"
+```
+
+`summary`、`assistance`、`observed_at`、`parts`、`followup` 原样保留。带 `corrected` 的 EV 不作 `expression: strong` 与 facet `state: ok` 的支撑；受影响的 facet 按修正后的 `result` 重定状态。
 
 ## 一课的条数上限
 

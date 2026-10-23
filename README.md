@@ -1,6 +1,22 @@
-# Tutor — Teach Hybrid v9.1.2（中文版）
+# Tutor — Teach Hybrid v9.3（中文版）
 
-调用：`/tutor <想学什么 | 继续 | 考我 L0008 | 复习 | 摸底 | 模拟面>`
+调用：`/tutor <想学什么 | 继续 | 考我 L0008 | 复习 | 摸底 | 模拟面 | 今天只听 | 15 分钟>`
+
+## 安装到任何 agent
+
+skill 就是这个目录，没有运行时依赖（机判脚本可选，需要 Python 3）。不同 agent 扫描的目录不同，用脚本把本目录**链接**过去，一份源码所有 agent 共用：
+
+```text
+Windows        powershell -ExecutionPolicy Bypass -File scripts/install.ps1   [-Cursor] [-Project <项目路径>] [-Uninstall]
+macOS / Linux  bash scripts/install.sh                                         [--cursor] [--project DIR] [--uninstall]
+```
+
+默认链接到 `~/.agents/skills/tutor`（Cursor、Codex 及读 `.agents/skills` 的 agent）、`~/.claude/skills/tutor`（Claude Code）、`~/.codex/skills/tutor`（Codex CLI）。`-Project` 再加到项目级 `.agents/skills` 与 `.claude/skills`。卸载只删链接，不碰真实目录。
+
+- 调用：`/tutor 继续`；没有斜杠命令的 agent 说「用 tutor skill，继续」。
+- agent 没列出这个 skill（目录没被扫描）：把路径直接给它——「读 `<skill 路径>/SKILL.md`，按 RUNBOOK 开课，workspace 在 `<项目>/learning/<topic>`」。skill 只是 markdown，能读文件就能用。
+- workspace 默认在当前目录 `learning/<topic>/`；跨目录时设环境变量 `TUTOR_WORKSPACE`，或在对话里说路径。
+- `disable-model-invocation: true`：只能由你调用，agent 不会在无关对话里自动套用它。
 
 有状态教学系统。核心承诺：**学习者的证据改变后续教学**，而不是按大纲放课件。
 
@@ -28,8 +44,9 @@ v9.1 的一句话：**先讲明白，再练到会，最后考到稳；用真实�
 |---|---|
 | `SKILL.md` | 入口。课型、规则、五道门 |
 | `RUNBOOK.md` | **每次完整课都读**。开场、课型、课中顺序、写入集、面试题采集 |
-| `GATES.md` | **五道门判据的唯一来源**：结构/讲解/练习/考官/证据；计分交互只以这里为准 |
+| `GATES.md` | **五道门判据的唯一来源**：结构/讲解/练习/考官/证据；计分交互、作答成本与反馈、系统失误修正只以这里为准 |
 | `scripts/check-gates.py` | 结课前只读机判。打印 ERROR/WARN，不写 workspace |
+| `scripts/install.ps1` / `install.sh` | 把本目录链接进各 agent 的 skills 目录；`-Uninstall` 只删链接 |
 | `lesson-design.md` | 写课时。讲解块、矩阵、练习阶梯、样例→补全→独立、plan 模板、两种页面 |
 | `EXAMINER.md` | 课末考官。2–3 题、X 探测、决策语义；面试线未写「不适用」时含 E-F |
 | `INTERVIEW-BANK-FORMAT.md` | 题库格式与采集/使用协议（课后入库、下节课口述、模拟面） |
@@ -46,11 +63,14 @@ v9.1 的一句话：**先讲明白，再练到会，最后考到稳；用真实�
 ## 核心环
 
 ```text
-WORKSPACE.yaml + MISSION(含面试线) + KS/facets + 到期 RQ + 面试题库
-→ 定课型（NEW_CONCEPT / PRACTICE / REVIEW / MOCK）
-→ 开场：R0（按 `GATES.md`）+ 面试线未写「不适用」时 1 道 60 秒面试口述（题库）
+WORKSPACE.yaml + MISSION(含面试线、真实上下文) + KS/facets + 到期 RQ + 面试题库
+→ 开场三句：上次达成一句 → 2–3 个带分钟数的选项（债务只是其中一项）→ 学习者选
+→ 定课型（NEW_CONCEPT / PRACTICE / REVIEW / MOCK）与预算档（15 / 30 / 45 / 60）
+→ R0（按 `GATES.md`）+ 面试线未写「不适用」时 1 道 60 秒面试口述（题库）+ 不计分开胃预测
 → 新概念课：讲解块（7 元素，400–800 字）→ 完整样例 → 补全 → 独立 → 边界/迁移(嵌入旧知) → 实操
-→ 考官 2–3 题（只考讲到位；面试线未写「不适用」时 E-F 必选）
+   （计分题一次一题、题面带过线行、答完当轮判；对的立刻记过）
+→ 考官 2–3 题（逐题发；只考讲到位；面试线未写「不适用」时 E-F 必选）
+→ 收尾两句：确认达成项 + 成长叙事（S 已达成 n/N、距面试线差哪几条）
 → 课末一次写入：evidence/LNNNN.yaml、KS、RQ、LR、plan gates、面试题库
 → 课后 5 分钟：检索真实面试题 2–4 道入库
 → 下节课 R0/口述取用；每 3 课模拟面；崩题回流 RQ
@@ -79,5 +99,7 @@ WORKSPACE.yaml + MISSION(含面试线) + KS/facets + 到期 RQ + 面试题库
   - 迁移：`workspace.md` §「从 v9.0 迁移到 v9.1」。
 - **v9.1.1**：不改课型。收口 jobs四审计里的冲突与逃逸：口述 `result` 只以 `EVIDENCE-FORMAT.md` 为准（没追问最高 `partial`）；模拟面固定 5 题，已用-崩「有则必含、没有不阻断」；`decayed` facet 先于今日前置，开场口述考同一条；G2 禁止讲解说死计分题结论；G5 增加六条机判失败（含同题订正不得 `passed`、facet `ok` 必须有独立证据）；官方源不可达时不新增计分题。
 - **v9.1.2**：计分交互只以 `GATES.md` 为唯一定义（一个教学块 ≤6，计划时最多先排 5 个给重试留位，重试不可取消）；其他文件不再另写一套数字。面试线写「不适用」时不排每课口述和 E-F。新增只读机判 `scripts/check-gates.py`。
+- **v9.3**：让人愿意回来。`GATES.md` 新增「开场、选择与收尾」唯一定义：先赢后债（开场先说上次达成，债务只是选项之一）、开场 2–3 个带分钟数的选项、真实上下文优先（`MISSION.md` 新增「真实上下文」一节，案例 A / P5 / E1 取学习者自己的代码和表）、不计分开胃预测、15 分钟档（来了就算）、结尾高点（最难题放中间）、成长叙事收尾、不催促。新增 `scripts/install.ps1` / `install.sh`：一键链接到 `~/.agents`、`~/.claude`、`~/.codex` 的 skills 目录，任何 agent 可用。
+- **v9.2**：把学习者的作答成本当成要管理的资源。`GATES.md` 新增「作答成本与反馈」唯一定义：一次一题、题面过线行（判分只按它）、机制题短句过线（四段只用于面试口述）、对的立刻记过、同一缺口只 1 次新变式且重试前先 ≤200 字补救、追问当轮完成、开场不泄题、收尾第一句是达成项、学习者喊停不记负面、规则改版不追溯。G5 新增「系统失误修正」：记账错误改单条 EV（`corrected` 块）并告知一句，不转学习者重测。RUNBOOK 不再携带任何工作区状态。
 
 目标不是更大的题库，而是一个「因学习者证据变化而改变后续教学」的学习系统——**并且每节课都真的把东西讲明白。**

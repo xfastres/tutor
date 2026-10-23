@@ -107,6 +107,10 @@ last_ev: 0            # 已分配的最大 EV 编号；下一课从这里 +1 开
 
 不要求单独的大纲文件。顺序来自：`MISSION + 学习记录 + KS/facets + 摸底或题库 + ZPD`。避免无视学习者证据的死板大纲。
 
+## 从 v9.1.x 迁移到 v9.3
+
+无结构迁移。`WORKSPACE.yaml` 的 `protocol` 改 `v9.3`；EV 多一个可选的块式 `corrected`（见 `EVIDENCE-FORMAT.md`）；新课 plan 多「过线行」列、「开胃预测」与「真实上下文」两行；`MISSION.md` 可加「真实上下文」一节（按 `MISSION-FORMAT.md`，第一次开课时问学习者一句即可）。历史课、历史 EV、历史决策一律不按新版重审。
+
 ## 从 v9.0 迁移到 v9.1
 
 第一次用 v9.1 打开旧 workspace 时做一次，记一行到 NOTES 运营日志：
