@@ -1,4 +1,4 @@
-# 教学行为场景评审（v9.4）
+# 教学行为场景评审（v9.5）
 
 这些不是 LLM 打分。确定性约束由 `check-gates.py --self-test` 覆盖。本文件列出 agent 开课时必须对照的固定场景；评审时只打「符合 / 不符合」，并引用 `SKILL.md` 入口路由或对应唯一来源。
 
@@ -18,5 +18,8 @@
 | S12 | 老版本 workspace | 不因新上限追溯历史课 | `workspace.md` 迁移 | `old-protocol-no-block-cap` |
 | S13 | 非法 YAML / 缺失字段 | 报 parse error，不写回文件 | check-gates | `bad-yaml` / `missing-field-yaml` |
 | S14 | 学习者开口就说「继续」/「考我 L0008」 | 一句上次达成后直接执行，不再列 2–3 个选项 | `GATES.md` 开场选择权 | 人工评审 |
+| S15 | 面试模式启用的新概念课 | 只有一道口述：默认 E-F；R0 旧能力 decayed 或上次口述 failed 才改开场 | `GATES.md` 计分交互 | 人工评审 |
+| S16 | 锁/并发课，行为探针连续 2 课不可用 | 开场选项里提一次搭沙箱；拒绝后 MISSION 记一行，不再提 | `lesson-design.md` §5.1 | 人工评审 |
+| S17 | 讲解与 P1–P4 | 共用一张主表，新题改决定性变量；不每题换虚构表 | `lesson-design.md` §4 | 人工评审 |
 
 未覆盖：对话中「一次一题」无法用 YAML 机判；靠课中遵守 `GATES.md` 作答成本。
