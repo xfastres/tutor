@@ -13,7 +13,7 @@
 ## 1. 开场：读（按序，只读需要的）
 
 ```text
-0. WORKSPACE.yaml                   timezone、protocol、platform、last_ev（pending 则先过 workspace.md 迁移清单）
+0. WORKSPACE.yaml                   timezone、protocol、platform、last_ev（pending 或 protocol 旧则先过 `MIGRATIONS.md`）
 1. MISSION.md                       使命、S id、目标环境、面试模式是否启用（`MISSION-FORMAT.md`）、只读/沙箱环境
 2. plan（本课或续课）                课型、teaching_block、gates、进度行、待重试
 3. learning-records/ 最近 1–2 条     上一次的 Decision 与 Implications
@@ -184,18 +184,10 @@ teaching_block：教学深度 + 段落标题 + 本档必含元素（新概念课
 
 ## 9. 结束自检
 
-以 `GATES.md` 的 G1–G5 为准逐条勾；另外确认：
+以 `GATES.md` 的 G1–G5 为准逐条勾；门之外只再确认三件事：
 
 ```text
-[ ] 讲解块真的在对话里出现过（新概念课），不是只在 plan 里
-[ ] 计分交互按 `GATES.md`（上限不是配额）；考官题量按教学深度；面试模式启用时本课恰好一道口述（开场或 E-F）
-[ ] 没有一条消息同时发两道计分题；每题有过线行；同一缺口没有第二次新变式
-[ ] 开场给了 2–3 个选项，债务不是第一件事；新概念课有开胃预测
-[ ] 收尾两句：达成项 + 成长叙事；记账错误按「系统失误修正」改的，没有让学习者重答；没有催促类措辞
-[ ] 面试模式启用时：题已入库 2–4 道；未启用则本项划掉
-[ ] 有旧知则 P5 已嵌入并回写 used_in；无则 plan 写「无」
-[ ] evidence/LNNNN.yaml 一课一文件；EV 编号连续、无重复
-[ ] 到期没做的 RQ 写了去向；KS review_ref 与 RQ 一致
-[ ] 实操是真跑了并有原始结果，或已对过 Probes 三类后诚实降级
+[ ] 开场与收尾按 `GATES.md`「开场、选择与收尾」：意图明确直接执行 / 否则 2–3 个选项、债务不是第一件事；收尾两句；没有催促类措辞
+[ ] 记账错误按「系统失误修正」改的，没有让学习者重答
 [ ] learning-record 写了 Decision 与下一 ZPD 步
 ```

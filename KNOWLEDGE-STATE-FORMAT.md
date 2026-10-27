@@ -1,7 +1,5 @@
 # 知识状态（Knowledge State）
 
-> v9.1：dimensions 增加 `expression`（面试口述）；facet 可含 `interview-expression`；`used_in` 回写螺旋复用；`review_ref` 与 REVIEW-QUEUE 双向一致。
-
 一个概念/技能一个条目，只保存**当前状态**，不写课程流水账。
 
 ## 数据结构
@@ -21,7 +19,7 @@ knowledge_state:
   dimensions:
     conceptual_understanding: "strong"   # weak | partial | strong | unknown
     execution: "strong"
-    expression: "partial"                # v9.1：面试/口述表达，由 interview 证据支撑
+    expression: "partial"                # 面试/口述表达，由 interview 证据支撑
     changed_case: "partial"
     transfer: "unknown"
     boundary_awareness: "partial"
@@ -90,24 +88,18 @@ knowledge_state:
 - `partial`：核心关系可用，仍有限定条件、边界或一致性缺口。
 - `strong`：已测试条件下表现充分、连贯、无已知关键缺口。不表示跨时间稳定。
 
-`execution` 表示使命定义的目标动作是否真正完成。目标依赖数据库、运行时、工具时，`execution: strong` 必须有通过的确定性执行引用——即一条 `type: execution`、`verification_ref` 指向通过 `VER` 记录的证据（v9.1：`verification_ref` 只用于 execution 证据）。口述命令、预测输出、静态推导不能证明运行能力。
+`execution` 表示使命定义的目标动作是否真正完成。目标依赖数据库、运行时、工具时，`execution: strong` 必须有通过的确定性执行引用——即一条 `type: execution`、`verification_ref` 指向通过 `VER` 记录的证据。口述命令、预测输出、静态推导不能证明运行能力。
 
 `conceptual_understanding: strong` 需至少一条 `type: explanation` 且 `assistance: independent` 的证据；预测题数值正确不算。`interview` 证据不替代它，只进 `expression`。
 
-`expression`（v9.1）表示能不能把能力**讲清楚**（面试场景）：60 秒内按「结论 → 原因 → 边界 → 例子」四段组织，并接住一次追问。它只由 `type: interview` 证据支撑：
+`expression` 表示能不能把能力**讲清楚**（面试场景）：60 秒内按「结论 → 原因 → 边界 → 例子」四段组织，并接住一次追问。它只由 `type: interview` 证据支撑：
 
 - `strong`：最近一次 interview `result: passed`，四段齐全、`reason` 到位、追问接住；
 - `partial`：能开口，但缺段、只给结论、或追问没接住；
 - `weak`：口述失败、只背结论、讲不出原因，或同题反复卡壳；
 - `unknown`：还没做过口述。
 
-## 表达维度与面试口述（v9.1）
-
-- `expression` 是独立维度，不替代 `conceptual_understanding`：会做、会写，不等于能在 60 秒里讲明白；反之亦然。两者各自引证据。
-- 一次 interview 通过只说明「这次讲清了」，不说明跨时间稳定；表达维度同样受「stable 需延迟/交错」约束。
-- interview 的主题要落在已 `讲到位` 的矩阵项上；`未讲` 的内容不出口述题、也不记 interview 证据。
-- 口述题从 `INTERVIEW-BANK.md` 取；同题隔课复测要新 `EV`（新 `task_id`），不复用旧条目。
-- 面试线是使命的验收渠道之一：能力达 `functional` 后，`expression` 可先于 `transfer` 提升；两者互不替代。
+口述题只出在已 `讲到位` 的矩阵项上，`未讲` 的内容不记 interview 证据；能力达 `functional` 后，`expression` 可先于 `transfer` 提升。它与理解、迁移、稳定性互不替代，见下面一致性规则 14–16。
 
 ## facets
 
@@ -117,7 +109,7 @@ knowledge_state:
 - 升到 `stable` 时所有已测 facet 必须为 `ok`；`untested` 的 facet 不阻止 `stable`，但应在后续 R0 顺序 3 中优先出题。
 - R0 命中某 facet 时，无论对错都更新 `last_verified` 与 `state`，并产生 evidence。
 
-**表达类 facet 模板（v9.1）**：能力一旦进入 interview 线，加一条 `interview-expression` facet，只用于表达判定：
+**表达类 facet 模板**：能力一旦进入 interview 线，加一条 `interview-expression` facet，只用于表达判定：
 
 ```yaml
     - id: "interview-expression"
@@ -139,7 +131,7 @@ knowledge_state:
 
 `stable` 不是比 `transferable` 更高的能力层级。
 
-## 螺旋复用与 used_in（v9.1）
+## 螺旋复用与 used_in
 
 触发条件：本课是 `NEW_CONCEPT`，且 P5/迁移任务里**嵌入了已学能力**（不是 R0 原题重测），SKILL 规则 23。此时在**旧能力**的 KS 里回写一条对象：
 
@@ -158,7 +150,7 @@ knowledge_state:
 - 历史字符串形式（`used_in: ["group-by-count-empty-match"]`）保留兼容、不批量改写；新写入一律用对象。
 - 复用失败本身不直接降级旧能力，但若失败命中旧 facet，按 facet `decayed` 规则处理并产生 evidence。
 
-## review_ref 与 REVIEW-QUEUE 双向一致（v9.1）
+## review_ref 与 REVIEW-QUEUE 双向一致
 
 复习的调度事实只属于 `REVIEW-QUEUE.md`；KS 只存指针，但**指针必须与队列双向对得上**：
 
@@ -200,7 +192,7 @@ knowledge_state:
 
 - `id` 用稳定 kebab-case；同一概念跨课程复用。
 - 到期时间只在 REVIEW-QUEUE 维护；本文件不存第二套。
-- 条目的 `evidence` 摘要逐条写 `EV-NNNN`；详细证据结构见 `EVIDENCE-FORMAT.md`（v9.1：一课一文件 `evidence/LNNNN.yaml`）。
+- 条目的 `evidence` 摘要逐条写 `EV-NNNN`；详细证据结构见 `EVIDENCE-FORMAT.md`（一课一文件 `evidence/LNNNN.yaml`）。
 
 ## 更新规则
 

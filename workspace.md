@@ -36,9 +36,8 @@ workspace 是持久状态。一个 workspace 一个使命；并行多个不相�
 | 什么时候复习什么、完成了没 | `REVIEW-QUEUE.md` | `review_ref` 指针 |
 | 学习者做了什么、支撑程度 | `evidence/` | 引用 EV id |
 | 真实面试题、来源、可信度、使用情况 | `INTERVIEW-BANK.md` | 引用 IQ id |
-| 讲解块、矩阵、答案钥匙、门记录 | `lessons/*.plan.md` | 不复制 |
+| 讲解块、矩阵、答案钥匙、考官计划、门记录 | `lessons/*.plan.md` | 不复制 |
 | 发生了什么持久变化、Decision、下一步 | `learning-records/` | 链接 |
-| 课的矩阵、答案钥匙、考官计划 | `lessons/*.plan.md` | 不复制 |
 | 规范用语 | `GLOSSARY.md` | 遵循 |
 | 可信来源 | `RESOURCES.md` | 引用 |
 | 学习者偏好、运营备忘 | `NOTES.md` | — |
@@ -87,7 +86,7 @@ locale: zh-CN
 skill: tutor          # 使用的 skill 目录名
 protocol: v9.1        # 遵循的协议版本
 platform: cursor      # cursor | dsh | other
-migration: done       # pending | done；pending 时先过迁移清单
+migration: done       # pending | done；pending 时先过 MIGRATIONS.md
 last_ev: 0            # 已分配的最大 EV 编号；下一课从这里 +1 开始
 ```
 
@@ -101,55 +100,12 @@ last_ev: 0            # 已分配的最大 EV 编号；下一课从这里 +1 开
 4. 不为「接触过」写记录；不在每节课重建共享资产。
 5. 课程要能独立打开；引用紧贴事实性论断。
 6. 一次更新内保持一致：活动 RQ 完成/失败与 `review_ref` 更新是同一逻辑写入。
-7. **课末一次写**：evidence 一课一文件、plan 进度与门记录、KS、RQ、LR、INTERVIEW-BANK 在结课时集中写；不每答一题写一次文件（v9.1 起）。
+7. **课末一次写**：evidence 一课一文件、plan 进度与门记录、KS、RQ、LR、INTERVIEW-BANK 在结课时集中写；不每答一题写一次文件。
 
 ## 课程排序
 
 不要求单独的大纲文件。顺序来自：`MISSION + 学习记录 + KS/facets + 摸底或题库 + ZPD`。避免无视学习者证据的死板大纲。
 
-## 从 v9.4 迁移到 v9.5
+## 迁移
 
-无结构迁移，不改历史。`MISSION.md` 约束可加一行「沙箱提议」（`MISSION-FORMAT.md`）；新课 plan 的「面试口述」行写开场或 E-F 之一，「真实上下文」行写来源或「无：原因」。已排好的未开课 plan 若同时排了开场口述和 E-F，开课前删掉其一。
-
-## 从 v9.3 迁移到 v9.4
-
-无结构迁移，**不改历史 Evidence / KS / RQ**。`WORKSPACE.yaml` 的 `protocol` 可改 `v9.4`（不改也不追溯）。新课 plan 多一行 `教学深度`。面试模式按 `MISSION-FORMAT.md` 解释已有 MISSION：已有 `S-I*` 或非「不适用」的面试安排 → 保持启用；本节缺失且无 `S-I*` → 视为关闭，不要补写面试线。新课按入口路由与深度档走；历史课不重审。
-
-## 从 v9.1.x 迁移到 v9.3
-
-无结构迁移。`WORKSPACE.yaml` 的 `protocol` 改 `v9.3`；EV 多一个可选的块式 `corrected`（见 `EVIDENCE-FORMAT.md`）；新课 plan 多「过线行」列、「开胃预测」与「真实上下文」两行；`MISSION.md` 可加「真实上下文」一节（按 `MISSION-FORMAT.md`，第一次开课时问学习者一句即可）。历史课、历史 EV、历史决策一律不按新版重审。
-
-## 从 v9.0 迁移到 v9.1
-
-第一次用 v9.1 打开旧 workspace 时做一次，记一行到 NOTES 运营日志：
-
-```text
-[ ] WORKSPACE.yaml：protocol 改 v9.1；补 last_ev（取现有最大 EV 编号）
-[ ] evidence/：新课改一课一文件 evidence/LNNNN.yaml；旧的多文件保留不迁移
-[ ] 新课的 plan：补 课型 / teaching_block / 预算 / 五道门记录位 / 复用旧知 行
-[ ] KNOWLEDGE-STATE/*.yaml：补 expression 维度（没有 interview 证据就写 unknown）
-[ ] 建立 INTERVIEW-BANK.md（按 INTERVIEW-BANK-FORMAT.md），先补 2–4 道历史相关题
-[ ] MISSION.md：补「面试线」一节（S-I1…），只追加不重编号
-[ ] NOTES.md：偏好区补「先讲后练」「四段式口述」；运营区记 v9.1 迁移
-[ ] REVIEW-QUEUE.md：普通项 > 4 时按 MEMORY-ENGINE 合并/转 R0 候选/推迟
-[ ] 旧 HTML：不重写；下次触及时拆讲解页/复习页
-```
-
-## 从 v8.x 迁移到 v9
-
-第一次用 v9 打开旧 workspace 时做一次，记一行到 NOTES 运营日志：
-
-```text
-[ ] WORKSPACE.yaml：补 skill / protocol / migration 三个字段；完成后把 migration 改为 done
-[ ] assets/lesson.css 若用 @import 引 skill 样式：路径指向 .cursor/skills/tutor/assets/lesson.css
-[ ] KNOWLEDGE-STATE/*.yaml：删除 review: 块，改为 review_ref（指向活动项或 null）
-[ ] KNOWLEDGE-STATE/*.yaml：已有的 examiner_result 块保留为历史，不再追加；新课的考官结论写 learning-record
-[ ] KNOWLEDGE-STATE/*.yaml：为每个能力补 2–6 条 facets；已有证据的标 ok/decayed，其余 untested
-[ ] KNOWLEDGE-STATE/*.yaml：补 mission_ids
-[ ] evidence/：缺 assistance 的历史条目不改写；在 KS 摘要里标 (legacy)，不用于新的升级
-[ ] REVIEW-QUEUE.md：活动项 > 4 时按 MEMORY-ENGINE 合并/转 R0 候选/推迟
-[ ] NOTES.md：删掉课序/状态表，只留偏好与运营日志
-[ ] 已有 lessons/*.html：不重写；下一次触及该课时把矩阵与答案钥匙移到 .plan.md
-[ ] assets/：拷贝 practice.js；旧 predict.js 可被替代（practice.js 兼容 .predict 与 .semantic-check 标记）
-[ ] MISSION.md：为已开但没有 S id 的能力追加 S id
-```
+旧版本 workspace 的迁移清单见 `MIGRATIONS.md`；只在 `WORKSPACE.yaml` 的 `protocol` 比当前版本旧或 `migration: pending` 时读。

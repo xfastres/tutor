@@ -1,6 +1,6 @@
 ---
 name: tutor
-version: 9.5
+version: 9.5.1
 description: 重量级有状态私教（Teach Hybrid v9.5）：持久 workspace（MISSION / KNOWLEDGE-STATE / REVIEW-QUEUE / evidence）+ 新概念先讲后测 + 按入口路由 + 面试模式显式启用 + 教学深度 micro/standard/deep + 一次一题/过线行。用于系统学习某主题、继续学习、出课/考我/复习/摸底/模拟面。与轻量版 /teach 不同：本技能读写 learning/ 下的 workspace。
 disable-model-invocation: true
 argument-hint: "想学什么 | 继续 | 开始训练 | 考我 L0008 | 复习 | 模拟面 | 今天只听 | 15 分钟"
@@ -34,7 +34,8 @@ argument-hint: "想学什么 | 继续 | 开始训练 | 考我 L0008 | 复习 | �
 | `MEMORY-ENGINE.md` | 选 R0、排 RQ、复习债。**模拟面一节仅面试模式启用时读** |
 | `KNOWLEDGE-STATE-FORMAT.md` / `EVIDENCE-FORMAT.md` / `REVIEW-QUEUE-FORMAT.md` | 写对应文件前 |
 | `INTERVIEW-BANK-FORMAT.md` | **仅面试模式启用**，或本会话明确模拟面/口述 |
-| `workspace.md` | 创建 workspace、迁移旧版、不确定某事实该写在哪时 |
+| `workspace.md` | 创建 workspace、不确定某事实该写在哪时 |
+| `MIGRATIONS.md` | `WORKSPACE.yaml` 的 `protocol` 比当前版本旧，或 `migration: pending` 时 |
 | `learning-engine.md` | 需要教学法/ZPD/诊断依据时 |
 | `SEMANTIC-VERIFICATION.md` | 校验生成式答案或真实执行结果时 |
 | `DIAGNOSTICS.md` | 学习者卡住、重复犯错、课变成题海时 |
@@ -146,19 +147,11 @@ argument-hint: "想学什么 | 继续 | 开始训练 | 考我 L0008 | 复习 | �
 29. 版本、环境、假设写进 plan 或 MISSION；未知记盲区。
 30. 卡住先按 `DIAGNOSTICS.md` 诊断阻塞点，不堆内容；课变成「全是题」或「全是字」时按 `DIAGNOSTICS.md` 的课型/讲解门条目处置。
 
-**作答成本与反馈**（v9.2；唯一定义见 `GATES.md`「作答成本与反馈」）
+**作答成本、开场与收尾**（唯一定义见 `GATES.md`「作答成本与反馈」「开场、选择与收尾」；以下只是提要）
 
-31. **一次一题**：计分题逐题发、当轮判；每题题面末尾一行「过线：…」，判分只按它。机制/预测/边界题默认过线是「结论 + 一句原因」；四段只用于面试口述。
-32. **对的立刻记 `passed`**，不因别的题错了捆绑重做。同一缺口最多 1 次新变式重试，重试前先 ≤200 字补救；仍不过建 `REPAIR：` 改日，不换第三张表。
-33. **记账错误是系统失误**（漏追问记 passed、同题提示记 passed、口述目标写错）：改单条 EV（加 `corrected`）、重定 facet、告知一句，不让学习者重答；规则改版不追溯历史课。
-34. **完成信号**：每次收尾第一句是本次确认达成项；失败反馈先说已达成再说差哪；开场不泄露本次计分题的结论。学习者说不想答/太多了：当轮收尾，`end_reason: learner_stop`，未答的题不算失败。
-
-**开场、选择与收尾**（v9.3；唯一定义见 `GATES.md`「开场、选择与收尾」）
-
-35. **先赢后债 + 选择权**：开场先说上次达成一句，再给 2–3 个带分钟数的选项；债务只是选项之一，不是第一件事；选哪个都不记负面。学习者已说出明确意图时不列选项，直接执行。
-36. **真实上下文优先 + 一课一张主表**：`MISSION.md` 登记了代码库/表/业务词时，主表与 P5 先从学习者自己的代码或数据取材（只读，不贴敏感数据），题干写明来源；没用就在 plan 写「无：原因」。讲解与 P1–P4 共用主表，新题靠改决定性变量，不靠换表名（`lesson-design.md` §4）。
-37. **开胃预测 + 15 分钟两档**：standard/deep 新概念课讲解块前先抛 1 个不计分开胃预测。15 分钟分签到与短时新知，定义见 `GATES.md`。
-38. **结尾高点 + 成长叙事 + 不催促**：考官最难的题放中间，最后一题是核心能力新表面；收尾第二句写 S 已达成 n/N；面试模式未启用时不写「距面试线差哪几条」。
+31. 一次一题、题面带过线行、对的当场记过；同一缺口最多 1 次新变式，仍不过建 `REPAIR：` 改日；记账错误改单条 EV、不让学习者重答；学习者喊停即收尾（`learner_stop`）。
+32. 开场先说上次达成；意图明确直接执行，否则给 2–3 个带分钟数的选项，债务只是其一。收尾第一句是达成项，第二句写 S 已达成 n/N；不催促。
+33. 真实上下文优先、一课一张主表（`lesson-design.md` §4）；`standard`/`deep` 新概念课有不计分开胃预测；15 分钟分签到与短时新知。
 
 ## 五道门
 
@@ -176,16 +169,7 @@ argument-hint: "想学什么 | 继续 | 开始训练 | 考我 L0008 | 复习 | �
 
 ## 课程模式
 
-```text
-新概念：按教学深度讲解 → 样例 → 补全 → 独立 →（standard/deep）边界/迁移 → 按深度考官
-练习/复习：R0/RQ → 变式练习 → 诊断 → 最小补讲 → 考官
-技能：目标 → 尝试 → 反馈 → 调整 → 重复 → 迁移 → 考官
-实操：预测 → 执行 → 保存结果 → 解释 → 改一个条件再执行 → 迁移 → 考官
-并发：双会话时间线 → 预测 → 改一个变量 → 判别组 → 考官（lesson-design §4.1）
-模拟面：抽题(题库+RQ崩题) → 60–120 秒作答 → 追问 → 评分 → 报告
-```
-
-不要强推统一仪式。练习阶梯 P1→P6 的定义唯一见 `lesson-design.md`；考官决策唯一见 `EXAMINER.md`；复习调度唯一见 `MEMORY-ENGINE.md`；门唯一见 `GATES.md`。
+各课型步骤见 `RUNBOOK.md` §4；实操循环 `lesson-design.md` §5.1；并发 §4.1；模拟面 `MEMORY-ENGINE.md`。不要强推统一仪式。练习阶梯 P1→P6 的定义唯一见 `lesson-design.md`；考官决策唯一见 `EXAMINER.md`；复习调度唯一见 `MEMORY-ENGINE.md`；门唯一见 `GATES.md`。
 
 ## 完成标准
 
@@ -193,4 +177,4 @@ argument-hint: "想学什么 | 继续 | 开始训练 | 考我 L0008 | 复习 | �
 
 ## 与轻量版 `/teach` 的关系
 
-`~/.agents/skills/teach` 是轻量版：HTML 为主要单元、强调提取流畅度 vs 存储强度与社区经验。本技能（原名也叫 `teach`，v9 改名 `tutor` 以消除同名冲突）把这两点吸收为 `learning-engine.md` 的 facet/流畅度段落、`RESOURCES-FORMAT.md` 的真实题源要求与 `INTERVIEW-BANK-FORMAT.md` 的题库管线；其余协议以本技能为准。判断一个 workspace 跟哪一版：有 `KNOWLEDGE-STATE/` 或 `WORKSPACE.yaml` 的就是本技能。
+区别与渊源见 `README.md`。判断一个 workspace 跟哪一版：有 `KNOWLEDGE-STATE/` 或 `WORKSPACE.yaml` 的就是本技能。
