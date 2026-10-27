@@ -524,6 +524,10 @@ def protocol_lesson(number, meta) -> bool:
         "9.3",
         "v9.4",
         "9.4",
+        "v9.4.1",
+        "9.4.1",
+        "v9.5",
+        "9.5",
     ):
         return number >= 14
     return False

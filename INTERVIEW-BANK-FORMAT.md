@@ -83,7 +83,7 @@
 
 ## 8. 与其他文件的接口
 
-- `RUNBOOK.md`：课后 5 分钟采集 → 下节课 1 道口述 → 每 3 课模拟面的固定顺序。
+- `RUNBOOK.md`：课后 5 分钟采集 → 每课 1 道口述（开场或 E-F，`GATES.md` 轮换）→ 每 3 课模拟面的固定顺序。
 - `EXAMINER.md`：模拟面判分沿用本文件四段 rubric；E-F 追问位优先使用题库里的追问链。
 - `MEMORY-ENGINE.md`：崩题按 `REPAIR：` 建 RQ；同一周到期的合并成一次交错测。
 - `KNOWLEDGE-STATE-FORMAT.md`：口述/模拟面触及旧能力时，按该文件的对象格式回写 `used_in`（`capability_id`、`lesson_id`、`evidence_id`）。不写「日期 + 题型」。
