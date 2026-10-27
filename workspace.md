@@ -48,7 +48,7 @@ workspace 是持久状态。一个 workspace 一个使命；并行多个不相�
 ## 文件职责
 
 - **MISSION.md**：指南针。为什么、可观察成功标准（稳定 S id）、约束（含目标环境与只读/沙箱环境）、范围。追加 S id 只需在对话确认一句并在 learning-record 记一行；改 Why/范围才算改使命，需确认。
-- **RESOURCES.md**：已审核来源。知识先落这里再进教学。面试/考核类使命的 Wisdom 栏至少一条真实题源。
+- **RESOURCES.md**：已审核来源。知识先落这里再进教学。面试模式启用时，Wisdom 栏至少一条真实题源。
 - **GLOSSARY.md**：学习者理解之后再收词。
 - **KNOWLEDGE-STATE/**：每个能力的当前状态、facets、证据摘要、弱点、链接、复习指针。按 `KNOWLEDGE-STATE-FORMAT.md`。
 - **REVIEW-QUEUE.md**：定向复习项。按 `REVIEW-QUEUE-FORMAT.md`。会话开始先看 `REPAIR：` 项（不看日期），再看到期/相关项。

@@ -17,5 +17,6 @@
 | S11 | Review Queue 引用丢失 | 活动项的知识 ID 无 KS 文件 → ERROR | `REVIEW-QUEUE-FORMAT.md` | `rq-dangling` |
 | S12 | 老版本 workspace | 不因新上限追溯历史课 | `workspace.md` 迁移 | `old-protocol-no-block-cap` |
 | S13 | 非法 YAML / 缺失字段 | 报 parse error，不写回文件 | check-gates | `bad-yaml` / `missing-field-yaml` |
+| S14 | 学习者开口就说「继续」/「考我 L0008」 | 一句上次达成后直接执行，不再列 2–3 个选项 | `GATES.md` 开场选择权 | 人工评审 |
 
 未覆盖：对话中「一次一题」无法用 YAML 机判；靠课中遵守 `GATES.md` 作答成本。
