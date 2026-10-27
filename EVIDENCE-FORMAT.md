@@ -1,12 +1,10 @@
 # 学习证据（Evidence Format）
 
-> v9.1：一课一文件 `evidence/LNNNN.yaml`；新增 `interview` 类型与 `parts`/`followup` 字段；`attempts` 弃用、`verification_ref` 只服务 `execution`。
-
 学习证据回答：**学习者实际做了什么，以及这件事足以支持哪个教学判断。**
 
 它不是完整聊天记录，也不是主观评价。
 
-## 文件组织（v9.1）
+## 文件组织
 
 一课一个文件，课末一次写入（SKILL 规则 25：写入集中在课末，不要每答一题写一次）：`evidence/LNNNN.yaml`。
 
@@ -161,7 +159,7 @@ v8.6 之前没有 `assistance` 的历史 Evidence 不要批量改写。能从原
 
 - 本文件保存**可引用的观察**；`KNOWLEDGE-STATE-FORMAT.md` 保存**当前压缩状态**。
 - 状态升级/降级必须引用 `evidence.id`，不引用自然语言结论或文件名。
-- 维度归属：`explanation` → `conceptual_understanding`；生成/诊断/实操 → `execution`；`boundary` → `boundary_awareness`；`transfer` → `transfer`；`interview` → `expression`（v9.1 新增，规则见 KS-FORMAT）。
+- 维度归属：`explanation` → `conceptual_understanding`；生成/诊断/实操 → `execution`；`boundary` → `boundary_awareness`；`transfer` → `transfer`；`interview` → `expression`（规则见 KS-FORMAT）。
 - 完整学习记录仍写入 `learning-records/`；证据不替代学习记录。
 
 ## 状态变化引用

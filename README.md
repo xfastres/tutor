@@ -57,7 +57,8 @@ v9.1 的一句话：**先讲明白，再练到会，最后考到稳；用真实�
 | `learning-engine.md` | 学习怎么发生。证据阶梯、欠/过拟合、反馈、facet、流畅度 vs 存储、ZPD 判定 |
 | `DIAGNOSTICS.md` | 效果差时。症状 → 原因 → 处置（含「全是题没讲解」「面试讲不出」） |
 | `SEMANTIC-VERIFICATION.md` | 设计校验器与只读实跑清单 |
-| `workspace.md` | 建/改 workspace。结构、每类事实写一处、WORKSPACE.yaml、ID 前缀、迁移 |
+| `workspace.md` | 建/改 workspace。结构、每类事实写一处、WORKSPACE.yaml、ID 前缀 |
+| `MIGRATIONS.md` | 旧版本 workspace 的迁移清单；protocol 旧时才读 |
 
 模板：`MISSION-FORMAT.md` `RESOURCES-FORMAT.md` `GLOSSARY-FORMAT.md` `KNOWLEDGE-STATE-FORMAT.md` `REVIEW-QUEUE-FORMAT.md` `EVIDENCE-FORMAT.md` `LEARNING-RECORD-FORMAT.md` `INTERVIEW-BANK-FORMAT.md`
 
@@ -94,9 +95,10 @@ v9.1 的一句话：**先讲明白，再练到会，最后考到稳；用真实�
   - **五道门**：四道门扩为结构/讲解/练习/考官/证据五道，判据、落盘产物、不过处置统一到 `GATES.md`；plan 增加 `课型 / teaching_block / 预算 / 门记录 / 复用旧知`。
   - **记账瘦身**：证据改为一课一文件 `evidence/LNNNN.yaml`（课末一次写，不再每答一题写一次）；`attempts` 降级、`verification_ref` 仅 execution 必填；plan 答案钥匙加「必须点/常见半对/失败模式」。
   - **交付**：HTML 拆「讲解页（可课前，无答案）」与「复习页（考官后，含真实错误）」；对话优先时讲解块必须在对话里出现。
-  - 迁移：`workspace.md` §「从 v9.0 迁移到 v9.1」。
+  - 迁移：`MIGRATIONS.md` §「从 v9.0 迁移到 v9.1」。
 - **v9.1.1**：不改课型。收口 jobs四审计里的冲突与逃逸：口述 `result` 只以 `EVIDENCE-FORMAT.md` 为准（没追问最高 `partial`）；模拟面固定 5 题，已用-崩「有则必含、没有不阻断」；`decayed` facet 先于今日前置，开场口述考同一条；G2 禁止讲解说死计分题结论；G5 增加六条机判失败（含同题订正不得 `passed`、facet `ok` 必须有独立证据）；官方源不可达时不新增计分题。
 - **v9.1.2**：计分交互只以 `GATES.md` 为唯一定义（一个教学块 ≤6，计划时最多先排 5 个给重试留位，重试不可取消）；其他文件不再另写一套数字。面试线写「不适用」时不排每课口述和 E-F。新增只读机判 `scripts/check-gates.py`。
+- **v9.5.1**：纯精简，不改行为。SKILL 规则 31–38 并为 3 条提要（唯一定义仍在 `GATES.md`），「课程模式」与「/teach 关系」改为指针；`lesson-design.md` §13 与 `RUNBOOK.md` §9 只留门之外的检查项；迁移清单移到 `MIGRATIONS.md`（protocol 旧时才读），并注明 v9.4 起跳过 v9.1 的「补面试线」；删正文里的「（v9.1）」版本标注；`KNOWLEDGE-STATE-FORMAT.md` 的 `expression` 规则去重。
 - **v9.5**：按真实课堂（mysql L0013/L0014）调教学方式。一课一张主表：讲解与 P1–P4 共用，新题靠改决定性变量而不是换表名，「实例不同」指变量取值组合；真实上下文没用必须写「无：原因」，只写「无」不过 G1；行为类验证连续 2 课不可用时开场提一次搭本地沙箱，拒绝后记进 MISSION 不再提；面试口述每课只一道（默认课末 E-F，R0 旧能力 `decayed` 或上次口述失败时改在开场）；修 §2.1「7 元素缺一不可」与 `micro` 的矛盾。
 - **v9.4.1**：学习者体验口径修正。意图明确（继续/考我/复习等）时开场只说上次达成就执行，不再列选项；面试口述缺段的判定统一到 `EVIDENCE-FORMAT.md`（G4 原写 `partial`，与映射冲突）；RUNBOOK/EXAMINER 的考官题量改为按教学深度，超预算压到 1 题；「面试/考核类使命」统一为「面试模式启用」；面试模式不再把所有课升 `deep`，只有本课能力对应 `S-I*` 或并发/锁/生产取舍才升；开胃预测只在 `standard`/`deep`；未启用面试模式不写「距面试线」；第一课「复用旧知」可写「无」。
 - **v9.4**：教学优先于考核。入口路由区分继续/新主题/模糊「开始训练」/轻量/考我/模拟面；没有主题先问一个问题，不出高级考核题。面试模式改为显式启用（默认关；已有 `S-I*` 的旧 workspace 保持开）。教学深度 `micro|standard|deep`；15 分钟分签到与短时新知（允许范围合适的新概念）。计分上限不是配额。按入口按需读文档。

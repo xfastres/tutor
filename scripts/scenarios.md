@@ -15,7 +15,7 @@
 | S9 | 用户中途停止 | `end_reason: learner_stop`；未答题不算失败 | `GATES.md` 作答成本 | 协议引用；无 workspace 机判 |
 | S10 | Evidence 与 KS 不一致 | facet `ok` 必须有独立通过 EV | G5 | `same-item-hinted-pass` / `ks-cites-missing-ev` |
 | S11 | Review Queue 引用丢失 | 活动项的知识 ID 无 KS 文件 → ERROR | `REVIEW-QUEUE-FORMAT.md` | `rq-dangling` |
-| S12 | 老版本 workspace | 不因新上限追溯历史课 | `workspace.md` 迁移 | `old-protocol-no-block-cap` |
+| S12 | 老版本 workspace | 不因新上限追溯历史课 | `MIGRATIONS.md` | `old-protocol-no-block-cap` |
 | S13 | 非法 YAML / 缺失字段 | 报 parse error，不写回文件 | check-gates | `bad-yaml` / `missing-field-yaml` |
 | S14 | 学习者开口就说「继续」/「考我 L0008」 | 一句上次达成后直接执行，不再列 2–3 个选项 | `GATES.md` 开场选择权 | 人工评审 |
 | S15 | 面试模式启用的新概念课 | 只有一道口述：默认 E-F；R0 旧能力 decayed 或上次口述 failed 才改开场 | `GATES.md` 计分交互 | 人工评审 |
